@@ -1,6 +1,7 @@
 ./objects/inv_mpu_dmp_motion_driver.o: \
   ..\BSP\eMPL\inv_mpu_dmp_motion_driver.c ..\BSP\eMPL\inv_mpu.h \
-  ..\..\Car_Control_Summary_1-2Completed\board.h \
+  ..\BSP\eMPL\inv_mpu_dmp_motion_driver.h ..\BSP\eMPL\dmpKey.h \
+  ..\BSP\eMPL\dmpmap.h ..\..\Car_Control_Summary_1-2Completed\board.h \
   ..\..\Car_Control_Summary_1-2Completed\ti_msp_dl_config.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\msp.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\DeviceFamily.h \
@@ -73,6 +74,4 @@
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_vref.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_wwdt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_interrupt.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h \
-  ..\BSP\eMPL\inv_mpu_dmp_motion_driver.h ..\BSP\eMPL\dmpKey.h \
-  ..\BSP\eMPL\dmpmap.h
+  C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h

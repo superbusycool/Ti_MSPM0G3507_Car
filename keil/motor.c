@@ -1,109 +1,80 @@
 #include <stdio.h>
 #include "ti_msp_dl_config.h"
+#include "motor.h"
 
+#include "board.h"
 
-void Motor_Forward(){
-	
-	DL_GPIO_setPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左侧
-	
+extern uint32_t PWMA,PWMB;
+extern int32_t motor_speed;
+extern int32_t motor_mode;//0默认停止  1速度环  2位置环  3循迹
 
+void motor_init(void)
+{
+	//编码器引脚外部中断
+	NVIC_ClearPendingIRQ(GPIOB_INT_IRQn);
+	NVIC_EnableIRQ(GPIOB_INT_IRQn);
 	
-	DL_GPIO_setPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);//右
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);
+		NVIC_ClearPendingIRQ(GPIOA_INT_IRQn);
+	NVIC_EnableIRQ(GPIOA_INT_IRQn);
 	
+//		/*使能编码器输入捕获中断*/
+//	NVIC_EnableIRQ(ENCODER_GPIOA_INT_IRQN);
+//	DL_TimerA_startCounter(ENCODER_GPIOA_INST);
+//	NVIC_EnableIRQ(ENCODER2A_INST_INT_IRQN);
+//	DL_TimerG_startCounter(ENCODER2A_INST);
+
+  //定时器中断
+	NVIC_ClearPendingIRQ(TIMER_0_INST_INT_IRQN);
+	NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
+	//若没有在sysconfig勾选Start Timer则需手动开启
+   DL_TimerG_startCounter(TIMER_0_INST);                 //开启计数
+
+	printf("Motor initialized successfully\r\n");
 }
 
-void Motor_Back(){
-	
-	DL_GPIO_setPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
-	
+void Motor_BL_go(){
 
-	
-	DL_GPIO_setPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);//右侧
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);
-	
-	
-}
-
-void Motor_Stop(){
-
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
-	
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);//右
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);
-	
-	
-}
-
-void Motor_FL(){
-	
-	DL_GPIO_setPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左侧
-	
-}
-
-
-
-void Motor_BR(){//FR改成BR
-	
-	DL_GPIO_setPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);//右侧
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);
+	DL_GPIO_setPins(MOTOR_AIN2_PORT,MOTOR_AIN2_PIN);
+	DL_GPIO_clearPins(MOTOR_AIN1_PORT,MOTOR_AIN1_PIN);
 
 }
 
-
-
-void Motor_BL(){
-
-	DL_GPIO_setPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
-
-}
-
-
-
-void Motor_FR(){//BR改成FR
-
-	DL_GPIO_setPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);//右
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);
+void Motor_BL_back(){
 	
+	DL_GPIO_setPins(MOTOR_AIN1_PORT,MOTOR_AIN1_PIN);
+	DL_GPIO_clearPins(MOTOR_AIN2_PORT,MOTOR_AIN2_PIN);
+
 }
 
-
-void Motor_SL(){
-
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain1_PIN);//左
-	DL_GPIO_clearPins(GPIO_GRP_A_PORT,GPIO_GRP_A_PIN_Ain2_PIN);
+void Motor_Stop_L(){
 	
+	DL_GPIO_clearPins(MOTOR_AIN1_PORT,MOTOR_AIN1_PIN);
+	DL_GPIO_clearPins(MOTOR_AIN2_PORT,MOTOR_AIN2_PIN);
+
 }
 
+void Motor_BR_go(){
 
-void Motor_SR(){
+	DL_GPIO_setPins(MOTOR_BIN1_PORT,MOTOR_BIN1_PIN);
+	DL_GPIO_clearPins(MOTOR_BIN2_PORT,MOTOR_BIN2_PIN);
 
-	DL_GPIO_setPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin1_PIN);//右
-	DL_GPIO_clearPins(GPIO_GRP_B_PORT,GPIO_GRP_B_PIN_Bin2_PIN);
-	
 }
 
+void Motor_BR_back(){
+
+	DL_GPIO_setPins(MOTOR_BIN2_PORT,MOTOR_BIN2_PIN);
+	DL_GPIO_clearPins(MOTOR_BIN1_PORT,MOTOR_BIN1_PIN);
+
+}
+
+void Motor_Stop_R(){
+	DL_GPIO_clearPins(MOTOR_BIN2_PORT,MOTOR_BIN2_PIN);
+	DL_GPIO_clearPins(MOTOR_BIN1_PORT,MOTOR_BIN1_PIN);
+}
 
 #define Speed_Integral_Start_Err 100
 #define Speed_Integral_Max_Val 50
 
-
-struct PID
-{
-    float target_val;
-    float  output_val;
-    float error;
-    float err_last;
-    float integral;
-    float Kp;
-    float Ki;
-    float Kd;
-};
 
 struct PID pid_speed;
 void PID_param_init()
@@ -155,7 +126,7 @@ void set_pwmL(int pwm)
         return; /*只能是0~1999*/
     }
 
-    DL_TimerG_setCaptureCompareValue(PWM_AB_INST, 2000-pwm, GPIO_PWM_AB_C0_IDX);
+    DL_TimerG_setCaptureCompareValue(PWM_AB_INST, 2000 - pwm, GPIO_PWM_AB_C0_IDX);
 }
 
 //设置PWM输出的占空比，注意这里的最大2000是根据ARR自动重装载的值
@@ -174,41 +145,31 @@ void set_pwmR(int pwm)//右侧不能给零
 //通过PWM以及正负号控制左侧两个电机转动的方向和速度
 void set_motor_rotateL(int pwm)
 {
-    if(pwm > 0)
-    {
-        set_pwmL(pwm);
-        Motor_FL();
-    }
-    else if(pwm < 0)
-    {
-        set_pwmL(-pwm);
-        Motor_BL();
-    }
-    else
-    {
-        set_pwmL(0);
-        Motor_SL();
-    }
+
+        if(pwm <  0){
+					 Motor_BL_back();
+					 set_pwmL(-pwm);
+				}
+				else{
+				   Motor_BL_go();
+					set_pwmL(pwm);
+				}
+
+
 }
 
 //通过PWM以及正负号控制右侧两个电机转动的方向和速度
 void set_motor_rotateR(int pwm)
 {
-    if(pwm > 0)
-    {
-        set_pwmR(pwm);
-        Motor_FR();
-    }
-    else if(pwm < 0)
-    {
-        set_pwmR(-pwm);
-        Motor_BR();
-    }
-    else
-    {
-        set_pwmR(0);
-        Motor_SR();
-    }
+        if(pwm <  0){
+					 Motor_BR_back();
+					 set_pwmR(-pwm);
+				}
+				else{
+				   Motor_BR_go();
+					set_pwmR(pwm);
+				}
+
 }
 
 /**
@@ -260,107 +221,164 @@ float Speed_Pid_Cal(struct PID *pid,float Speed_Current)
     return pid->output_val;
 }
 
-int gpioA=0;
-int gEncoderCountA=0;
-
-//void GROUPEncoderA_IRQHandler(void)
-//{
-//    //获取中断信号
-//    gpioA = DL_GPIO_getEnabledInterruptStatus(GPIOA,
-//    GPIO_GRP_EncoderA_PIN_AL_PIN  | GPIO_GRP_EncoderA_PIN_BL_PIN );
-// 
-//    //如果是GPIO_EncoderA_PIN_0_PIN产生的中断
-//    if((gpioA & GPIO_GRP_EncoderA_PIN_AL_PIN) == GPIO_GRP_EncoderA_PIN_AL_PIN)
-//    {
-//        //Pin0上升沿，看Pin1的电平，为低电平则判断为反转，高电平判断为正转
-//        if(!DL_GPIO_readPins(GPIOA,GPIO_GRP_EncoderA_PIN_BL_PIN))//P1为低电平
-//        {
-//            gEncoderCountA--;
-//        }
-//        else//P1为高电平
-//        {
-//            gEncoderCountA++;
-//        }
-//    }
-//    
-//    //类似于Stm32中编码器模式的AB两相都测，可得到2倍的计数
-//    else if((gpioA & GPIO_GRP_EncoderA_PIN_BL_PIN ) == GPIO_GRP_EncoderA_PIN_BL_PIN )
-//    {
-//        //Pin1上升沿
-//        if(!DL_GPIO_readPins(GPIOA,GPIO_GRP_EncoderA_PIN_AL_PIN))//P0为低电平
-//        {
-//            gEncoderCountA++;
-//        }
-//        else//P1为高电平
-//        {
-//            gEncoderCountA--;
-//        }
-//    }
-//    
-//    //最后清除中断标志位
-//    DL_GPIO_clearInterruptStatus(GPIOA, GPIO_GRP_EncoderA_PIN_AL_PIN|GPIO_GRP_EncoderA_PIN_BL_PIN);
-//}
-
-//int gpioB=0;
-//int gEncoderCountB=0;
-//float Speed_L = 0;
-//float Speed_R = 0;
-
-//void GROUPEncoderB_IRQHandler(void)
-//{
-//    //获取中断信号
-//    gpioA = DL_GPIO_getEnabledInterruptStatus(GPIOA,
-//    GPIO_GRP_EncoderB_PIN_AR_PIN | GPIO_GRP_EncoderB_PIN_BR_PIN );
-// 
-//    //如果是GPIO_EncoderA_PIN_0_PIN产生的中断
-//    if((gpioA & GPIO_GRP_EncoderB_PIN_AR_PIN) == GPIO_GRP_EncoderB_PIN_AR_PIN)
-//    {
-//        //Pin0上升沿，看Pin1的电平，为低电平则判断为反转，高电平判断为正转
-//        if(!DL_GPIO_readPins(GPIOA,GPIO_GRP_EncoderB_PIN_BR_PIN))//P1为低电平
-//        {
-//            gEncoderCountB--;
-//        }
-//        else//P1为高电平
-//        {
-//            gEncoderCountB++;
-//        }
-//    }
-//    
-//    //类似于Stm32中编码器模式的AB两相都测，可得到2倍的计数
-//    else if((gpioA & GPIO_GRP_EncoderB_PIN_BR_PIN) == GPIO_GRP_EncoderB_PIN_BR_PIN)
-//    {
-//        //Pin1上升沿
-//        if(!DL_GPIO_readPins(GPIOA,GPIO_GRP_EncoderB_PIN_AR_PIN))//P0为低电平
-//        {
-//            gEncoderCountB++;
-//        }
-//        else//P1为高电平
-//        {
-//            gEncoderCountB--;
-//        }
-//    }
-//    
-//    //最后清除中断标志位
-//    DL_GPIO_clearInterruptStatus(GPIOA, GPIO_GRP_EncoderB_PIN_AR_PIN|GPIO_GRP_EncoderB_PIN_BR_PIN);
-//}
 
 
-///**
-// * @函数介绍: 定时器10ms中断
-// * @输入参数: 无
-// * @输出参数: 无
-// * @说明: 每1ms进一次中断，请勿在该函数中添加delay等死循环函数
-// *        无需将该函数放在main函数中
-// */
-//void TIMER_10MS_INST_IRQHandler(void)
-//{
-//	/* 这里可以放置用户的函数 */
-//	Speed_L = (gEncoderCountA*0.048f*3.14f)/(10.4f);
-//	Speed_R = (gEncoderCountB*0.048f*3.14f)/(10.4f);
-//	
+static ENCODER_RES motor_encoderL;
+static ENCODER_RES motor_encoderR;
+//编码器初始化
+void encoder_init(void)
+{
+	//编码器引脚外部中断
+	NVIC_ClearPendingIRQ(GPIOB_INT_IRQn);
+	NVIC_EnableIRQ(GPIOB_INT_IRQn);
 	
-	
-	
-	
-	
+		//编码器引脚外部中断
+	NVIC_ClearPendingIRQ(GPIOA_INT_IRQn);
+	NVIC_EnableIRQ(GPIOA_INT_IRQn);
+}
 
+//获取编码器的值
+int get_encoderL_count(void)
+{
+	return motor_encoderL.count;
+}
+//获取编码器的方向
+ENCODER_DIR get_encoder_dir(void)
+{
+	return motor_encoderL.dir;
+}
+
+//编码器数据更新
+//请间隔一定时间更新
+void encoderL_update(void)
+{
+	motor_encoderL.count = motor_encoderL.temp_count;
+
+	//确定方向
+	motor_encoderL.dir = ( motor_encoderL.count >= 0 ) ? FORWARD : REVERSAL;
+
+	motor_encoderL.temp_count = 0;//编码器计数值清零
+}
+//获取编码器的值
+int get_encoderR_count(void)
+{
+	return motor_encoderR.count;
+}
+//获取编码器的方向
+ENCODER_DIR get_encoderR_dir(void)
+{
+	return motor_encoderR.dir;
+}
+
+//编码器数据更新
+//请间隔一定时间更新
+void encoderR_update(void)
+{
+	motor_encoderR.count = motor_encoderR.temp_count;
+
+	//确定方向
+	motor_encoderR.dir = ( motor_encoderR.count >= 0 ) ? FORWARD : REVERSAL;
+
+	motor_encoderR.temp_count = 0;//编码器计数值清零
+}
+
+
+//外部中断处理函数
+void GROUP1_IRQHandler(void)
+{
+	uint32_t gpio_status;
+
+	//获取中断信号情况
+	gpio_status = DL_GPIO_getEnabledInterruptStatus(ENCODER_E1A_PORT, ENCODER_E1A_PIN | ENCODER_E1B_PIN);
+	//编码器A相上升沿触发
+	if((gpio_status & ENCODER_E1A_PIN) == ENCODER_E1A_PIN)
+	{
+		//如果在A相上升沿下，B相为低电平
+		if(!DL_GPIO_readPins(ENCODER_E1A_PORT,ENCODER_E1B_PIN))
+		{
+			motor_encoderL.temp_count++;
+		}
+		else
+		{
+			motor_encoderL.temp_count--;
+		}
+	}//编码器B相上升沿触发
+	else if((gpio_status & ENCODER_E1B_PIN)==ENCODER_E1B_PIN)
+	{
+		//如果在B相上升沿下，A相为低电平
+		if(!DL_GPIO_readPins(ENCODER_E1A_PORT,ENCODER_E1A_PIN))
+		{
+			motor_encoderL.temp_count--;
+		}
+		else
+		{
+			motor_encoderL.temp_count++;
+		}
+	}
+	//清除状态
+	DL_GPIO_clearInterruptStatus(ENCODER_E1A_PORT,ENCODER_E1A_PIN|ENCODER_E1B_PIN);
+
+  uint32_t gpio_status1;
+
+	//获取中断信号情况
+	gpio_status1 = DL_GPIO_getEnabledInterruptStatus(ENCODER_E2A_PORT, ENCODER_E2A_PIN | ENCODER_E2B_PIN);
+	//编码器A相上升沿触发
+	if((gpio_status1 & ENCODER_E2A_PIN) == ENCODER_E2A_PIN)
+	{
+		//如果在A相上升沿下，B相为低电平
+		if(!DL_GPIO_readPins(ENCODER_E2A_PORT,ENCODER_E2B_PIN))
+		{
+			motor_encoderR.temp_count++;
+		}
+		else
+		{
+			motor_encoderR.temp_count--;
+		}
+	}//编码器B相上升沿触发
+	else if((gpio_status1 & ENCODER_E2B_PIN)==ENCODER_E2B_PIN)
+	{
+		//如果在B相上升沿下，A相为低电平
+		if(!DL_GPIO_readPins(ENCODER_E2A_PORT,ENCODER_E2A_PIN))
+		{
+			motor_encoderR.temp_count--;
+		}
+		else
+		{
+			motor_encoderR.temp_count++;
+		}
+	}
+	//清除状态
+	DL_GPIO_clearInterruptStatus(ENCODER_E2A_PORT,ENCODER_E2A_PIN|ENCODER_E2B_PIN);
+}
+
+void timer_init(void)
+{
+    //定时器中断
+	NVIC_ClearPendingIRQ(TIMER_0_INST_INT_IRQN);
+	NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
+	
+	DL_TimerA_startCounter(TIMER_0_INST);	 // 开始计时
+}
+
+//电机编码器脉冲计数
+void TIMER_0_INST_IRQHandler(void)
+{
+
+	if( DL_TimerA_getPendingInterrupt(TIMER_0_INST) == DL_TIMER_IIDX_ZERO )
+	{
+		//编码器更新
+		encoderL_update();
+		encoderR_update();
+		
+//		motor_encoderR.SPEED = ((motor_encoderR.count / 520) * (3.14 * 0.024)) / 0.01;
+		motor_encoderR.SPEED = motor_encoderR.count * 0.0145 ;
+		motor_encoderL.SPEED = motor_encoderL.count * 0.0145 ;
+		printf("EncoderR = %f\n",motor_encoderR.SPEED);
+		printf("EncoderL = %f\n",motor_encoderL.SPEED);
+		
+
+		
+		
+
+	}
+}

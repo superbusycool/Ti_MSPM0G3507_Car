@@ -71,4 +71,5 @@
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_vref.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_wwdt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_interrupt.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h
+  C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h \
+  motor.h ..\..\Car_Control_Summary_1-2Completed\board.h

@@ -1,18 +1,9 @@
-./objects/oled.o: ..\BSP\OLED\oled.c ..\BSP\OLED\oled.h \
-  ..\..\Car_Control_Try1\board.h \
-  ..\..\Car_Control_Try1\ti_msp_dl_config.h \
+./objects/oled.o: ..\oled\OLED.c \
+  ..\..\Car_Control_Summary_1-2Completed\ti_msp_dl_config.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\msp.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\DeviceFamily.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\m0p\mspm0g350x.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdint.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\third_party\CMSIS\Core\Include\core_cm0plus.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\third_party\CMSIS\Core\Include\cmsis_version.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\third_party\CMSIS\Core\Include\cmsis_compiler.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\third_party\CMSIS\Core\Include\cmsis_armclang.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\arm_compat.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h \
-  C:\ti\mspm0_sdk_2_01_00_03\source\third_party\CMSIS\Core\Include\mpu_armv7.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\peripherals\hw_adc12.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\peripherals\hw_aes.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\peripherals\hw_comp.h \
@@ -41,12 +32,10 @@
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\devices\msp\peripherals\m0p\sysctl\hw_sysctl_mspm0g1x0x_g3x0x.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\driverlib.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_adc12.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\math.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_common.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_factoryregion.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_core.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_aes.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stddef.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_aesadv.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_comp.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_crc.h \
@@ -83,4 +72,4 @@
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_wwdt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_interrupt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h ..\BSP\OLED\oledfont.h
+  ..\oled\OLED_Font.h ..\..\Car_Control_Summary_1-2Completed\board.h

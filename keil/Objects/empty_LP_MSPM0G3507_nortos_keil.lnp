@@ -4,9 +4,6 @@
 ".\objects\ti_msp_dl_config.o"
 ".\objects\board.o"
 ".\objects\motor.o"
-".\objects\bsp_mpu6050.o"
-".\objects\inv_mpu.o"
-".\objects\inv_mpu_dmp_motion_driver.o"
 ".\objects\dl_vref.o"
 ".\objects\dl_uart.o"
 ".\objects\dl_trng.o"
@@ -29,6 +26,11 @@
 ".\objects\dl_aesadv.o"
 ".\objects\dl_aes.o"
 ".\objects\dl_adc12.o"
+".\objects\main.o"
+".\objects\mpu6050.o"
+".\objects\myi2c.o"
+".\objects\bsp_gyro.o"
+".\objects\oled.o"
 --strict --scatter "./mspm0g3507.sct"
 C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\lib\keil\m0p\mspm0g1x0x_g3x0x\driverlib.a --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -71,7 +71,7 @@
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\dl_wwdt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_interrupt.h \
   C:\ti\mspm0_sdk_2_01_00_03\source\ti\driverlib\m0p\dl_systick.h \
-  ..\keil\motor.h ..\BSP\bsp_mpu6050.h \
-  ..\..\Car_Control_Summary_1-2Completed\board.h \
-  ..\..\Car_Control_Summary_1-2Completed\ti_msp_dl_config.h \
-  ..\BSP\eMPL\inv_mpu.h ..\board.h
+  ..\keil\motor.h ..\..\Car_Control_Summary_1-2Completed\board.h \
+  ..\..\Car_Control_Summary_1-2Completed\ti_msp_dl_config.h ..\board.h \
+  ..\JY61P\bsp_gyro.h ..\MPU6050\mpu6050.h ..\MPU6050\myi2C.h \
+  ..\oled\oled.h
